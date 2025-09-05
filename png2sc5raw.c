@@ -42,7 +42,7 @@ int main(int argc, char* argv[]) {
         printf("PNG image width is larger than 256.\n");
         return 1;    
     }
-    if(msx->w > 1024){
+    if(msx->h > 1024){
         printf("PNG image height is larger than 1024 (all for screen 5 pages).\n");
         return 1;    
     }
