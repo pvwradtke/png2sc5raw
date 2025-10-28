@@ -6,7 +6,12 @@ This file is distributed under the MIT license.
 
 To compile, install SDL2 and SDL2 Image and run:
 
-	gcc png2xpm.c -lSDL2 -lSDL2_image -o png2xp
+	gcc png2sc5raw.c -lSDL2 -lSDL2_image -o png2sc5raw
+
+Or:
+
+    make
+    make install
 
 */
 
@@ -34,19 +39,19 @@ int main(int argc, char* argv[]) {
     }
     if(msx->format->palette->ncolors!=16){
         printf("PNG doesn't have 16 indexed colors\n");
-        return 1;    
+        return 1;
     }
-    printf("File %s - Width: %d, Height: %d, %d colors\n", 
+    printf("File %s - Width: %d, Height: %d, %d colors\n",
     	argv[1], msx->w, msx->h, msx->format->palette->ncolors);
     if(msx->w > 256){
         printf("PNG image width is larger than 256.\n");
-        return 1;    
+        return 1;
     }
     if(msx->h > 1024){
         printf("PNG image height is larger than 1024 (all for screen 5 pages).\n");
-        return 1;    
+        return 1;
     }
-    
+
     for(int i=0;i<msx->format->palette->ncolors;i++){
 	palette[i] = (msx->format->palette->colors[i].g/32)<<8 | (msx->format->palette->colors[i].r/32) << 4 | (msx->format->palette->colors[i].b/32);
     	//printf("Color: %d - %02X, %02X %02X\n", i, msx->format->palette->colors[i].r/32,msx->format->palette->colors[i].g/32, msx->format->palette->colors[i].b/32);
@@ -79,8 +84,8 @@ int main(int argc, char* argv[]) {
         printf("Can't write raw image at %s\n", argv[2]);
         return 1;
     }
-    	
-    
+
+
    // Clean up
     SDL_FreeSurface(msx);
     IMG_Quit();
