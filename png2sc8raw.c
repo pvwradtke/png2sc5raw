@@ -23,7 +23,7 @@ uint8_t picture[65536];
 uint8_t palette[256];
 
 int main(int argc, char* argv[]) {
-    if(argc<4){
+    if(argc<3){
     	printf("Usage: png2scr8raw <pngfilename> <raw filename>\n");
     	return 1;
     }
@@ -37,8 +37,8 @@ int main(int argc, char* argv[]) {
         printf("Can't load the file\n");
         return 1;
     }
-    if(msx->format->palette->ncolors!=256){
-        printf("PNG doesn't have 256 indexed colors\n");
+    if(msx->format->palette->ncolors>256){
+        printf("PNG doesn't have 256 indexed colors. Colors: %d\n", msx->format->palette->ncolors);
         return 1;
     }
     printf("File %s - Width: %d, Height: %d, %d colors\n",
@@ -56,7 +56,7 @@ int main(int argc, char* argv[]) {
 	palette[i] = (msx->format->palette->colors[i].g/32)<<5 | (msx->format->palette->colors[i].r/32) << 2 | (msx->format->palette->colors[i].b/64);
     // Converts the pixels
     for(int i=0;i<msx->h;i++){
-    	for(int j=0;j<msx->w/2;j++)
+    	for(int j=0;j<msx->w;j++)
     		picture[i*256+j]=palette[((char*)msx->pixels)[i*msx->w+j]];
     }
     FILE *out = fopen(argv[2], "wb");
@@ -64,7 +64,7 @@ int main(int argc, char* argv[]) {
         printf("Can't open raw image at %s\n", argv[2]);
         return 1;
     }
-    int written = fwrite(picture, 1, msx->h*msx->w/2, out);
+    int written = fwrite(picture, 1, msx->h*msx->w, out);
     fclose(out);
     if (written!=msx->h*msx->w) {
         printf("Can't write raw image at %s\n", argv[2]);
